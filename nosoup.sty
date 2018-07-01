@@ -1,0 +1,17 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{nosoup}[2018/05/28 no soups.cls formating] 
+
+
+%% We basically just make a lot of the things defined in the soups.cls into noops.
+
+%% Authors will not be presented correctly here.
+%% We do not try to handle all of the information that the soups class offers
+%% instead we just throw away lots of text.
+
+\def\conferenceinfo#1#2{\relax}
+\def\CopyrightYear#1{\relax}
+\def\subtitle#1{\relax}
+\def\numberofauthors#1{\relax}
+\def\alignauthor{\relax}
+\def\affaddr#1{#1}
+\def\email#1{\texttt{#1}}

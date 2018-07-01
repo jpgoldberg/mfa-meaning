@@ -1,0 +1,496 @@
+% This is "soups-article.tex" for SOUPS 2018
+% This file should be compiled with "soups.cls" January 2017
+% Originally based on ACM sig-alternate template
+%
+
+
+%% Exactly one of the two lines below should be uncommented
+%\iftrue % Soups format
+\iffalse % for proof reading
+
+ \documentclass{soups} 
+
+\else
+  \documentclass[12pt]{article} 
+  \usepackage{nosoup}
+  \usepackage{setspace}
+  \onehalfspacing
+\fi
+
+% --- Start page size ---
+%Please use the following format  
+\pdfpagewidth=8.5truein 
+\pdfpageheight=11truein 
+% --- End page size ---
+
+
+\usepackage{graphicx}
+\usepackage{ifxetex}
+\ifxetex
+  \usepackage{fontspec}
+  \setmainfont{Times New Roman}
+\else
+  \usepackage{times} % Really? What a truly terrible choice.
+  \usepackage[utf8]{inputenc}
+\fi
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+%\newcommand{\xmark}{\ding{55}}%
+\newcommand{\xmark}{\ding{53}}%
+
+\usepackage{flushend} % much better than balance, which doesn't handle footnotes
+\renewcommand{\topfraction}{0.99} % be more aggressive about text around floats
+\renewcommand{\floatpagefraction}{0.99}
+\pagestyle{plain} % page numbers
+
+% Yes, I was told not to define new control sequences,
+% but this is one that should be easy for most converters to handle.
+\newcommand{\propdescription}[1]{\textit{#1}\newline}
+
+%% lets see if we can use biblatex and biber, so I don't
+%% have to misc-ify my online entries
+\usepackage[style=trad-abbrv,sortcites=true]{biblatex}
+\addbibresource{crypto.bib}
+
+\begin{document}
+%
+% --- Author Metadata here ---
+\conferenceinfo{USENIX Symposium on Usable Privacy and Security
+  (SOUPS)}{2018. \\ August~12--14,~2018, Baltimore,~MD,~USA.}
+\CopyrightYear{2018} 
+
+% --- End of Author Metadata ---
+
+\title{What does ``MFA'' mean?}
+\subtitle{Conversations, anecdotes, and a call for research}
+
+\numberofauthors{1} 
+\author{
+  \alignauthor
+  Jeffrey Goldberg\\
+       \affaddr{AgileBits, Inc.}\\
+       \affaddr{317 Adalaide Street West}\\
+       \affaddr{Toronto, Onterio, Canada}\\
+       \email{jeff@agilebits.com}
+}
+
+
+\maketitle
+\begin{abstract}
+
+Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security,
+and many explicitly security conscious individuals have come to demand it of various services.
+The security properties we may wish from authentication are complicated and subtle,
+and MFA's contribution to those properties is also far from simple or obvious.
+It is therefore to be expected that most users' understanding of MFA will contain errors, some of which may be dangerous.
+
+We discuss the security properties of MFA, the security expectations of MFA, and the causes for some of the mismatches between them.
+
+This is a practitioner presentation with no systematic data collection or analysis.
+It is based largely on experiences and conversations we have had with people requesting MFA for our product, a password manager.
+\end{abstract}
+
+
+\section{Introduction}
+Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security. And our experience -- as the makers of the password manager 1Password -- is that many people have come to insist on it.
+
+The demand for MFA appears disproportionate to the security it offers in many circumstances. Our experience over many years in attempting to explain our resistance to offering MFA has resulted in numerous conversations in which we attempt to understand why people insist on MFA.\@
+
+There are real and legitimate security benefits to MFA in many circumstances, but those benefits may rarely be what people are seeking or expecting from MFA, and the particular security benefits may not always be applicable to the individual use case.
+Among the misconceptions we've observed, the most dangerous is the belief that
+MFA would make it safe to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
+
+We start out with the discussion of the security properties one might want from any authentication system and some of the subtle distinctions between authentication and encryption.
+These distinctions and security properties are subtle and are probably not well understand by even by many experts. 
+We then talk about our experiences and discussions with customers, from which we've gained some idea of why people want MFA and what they believe it does for them.
+Finally, we call for research on expectations of MFA so that we do not have to rely on our intuitions and anecdotes.
+
+\section{Authentication desiderata}\label{sec:desiderata}
+
+Authentication, very very roughly, is the process of proving ones identity to some system or service.
+That service will either accept the proof or reject it.
+If accepted it will then grant access to some resource. In what follows I'm going to use terms like ``client'' and ``server'' with a great deal of imprecision. The client may narrowly be something computer program like a web-browser or it might more broadly be the user in combination with the web-browser.
+
+The most familiar form of authentication for the context of this discussion is providing a password. A user provides an identifier (a username) and a password to their client software (a web browser) which then transmit this information to a server. The server performs some check to determine whether the password is correct for that identity, and grants access iff it is correct.
+
+MFA is (largely) intended to bolster the security of authentication.
+Before we can assess whether it does and whether it does so in ways that people expect it to, we need to to consider some of the properties we may seek in an authentication protocol.
+
+\begin{description}
+  \item[CI] \propdescription{Proof of client identity}
+    The client should prove to the server that it is who it says it is.
+    In normal password authentication this is done by the client transmitting a secret, the password, to the server.
+
+  \item[SI] \propdescription{Proof of server identity}
+    For most website logins this is not done during user authentication.
+    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag symbol\footnote{The handbag symbol might appear as a closed padlock to many individuals}. If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
+	 
+    Password Authenticated Key Exchange protocols (PAKEs), which will be discussed below, provide mutual authentication.
+
+  \item[ZK+] \propdescription{Zero-knowledge +}
+  
+  There are a bunch of technically distinct security properties that together mean that during the authentication process no secret information is revealed to either party or to anyone who can eavesdrop on or manipulate the communication channel.
+  
+  Simple password authentication fails in multiple ways. It reveals the user's secret both to the server and to any eavesdropper.
+   
+  
+  \item[BigH] \propdescription{Unguessable long term secrets}
+    The long term secrets (passwords in the typical case) should not be guessable
+    but instead should be high entropy secrets.
+	
+	This is not generally true of human created passwords.
+    It is, however, true of MFA schemes such as TOTP (see \S\ref{sec:totp}).
+
+  \item[Uniq] \propdescription{Unique secrets}
+    If an attacker obtains a client authentication secret used for service $S$, 
+    that secret should not be reusable on any distinct service $S^\prime$.
+    Password reuse is a failure to achieve this. 
+
+  \item[NoCrk] \propdescription{Uncrackable server verifiers}
+   If server verification data (e.g., password hashes) are acquired,
+   the attacker should have no feasible way to recover user long term authentication secrets (e.g., the passwords).
+   Passwords stored in plaintext, TOTP secrets, and symmetric PAKE verifiers
+   provide those secrets immediately.
+   
+   Hashed passwords and asymmetric PAKE verifiers can be used
+   to verify password guessing attempts
+   can all be useful in password cracking attempts.
+
+   1Password's Two-Secret Key Derivation~\autocite{1Password:whitepaper}
+   and Tarsnap's key files \autocite{mwlucas:tarsnap}
+   are examples where nothing crackable is stored server-side.
+
+  \item[Notif] \propdescription{User notification of login attempts}
+    User is made aware of (failed) login attempts.
+    Systems like Duo Security or SMS based MFA provide this.
+    (See \S\ref{sec:push})
+
+  \item[FS] \propdescription{Secure if some factor compromised}
+    This is the definitional characteristic of MFA.
+    An MFA system remains secure as long as at least one factor is not compromised.
+    But it must be noted that it is only the \emph{authentication} process that is protected.
+    (cf.~CSec)
+
+  \item[Reset] \propdescription{Recoverability}
+   If the user loses/forgets their long term secrets, some recovery/reset procedure may be desired. Often times this comes at a very strong security cost in other respects, and so must be weighed carefully.
+
+  \item[Alt] \propdescription{Alternative authentication}
+  Instead of requiring both factors to authenticate, either factor on its own is sufficient in case the user has lost one of them. This is closely related to Reset, and brings with it notable risks, such as account take-over through discovery of answers to “security questions”.
+
+  \item[Use] \propdescription{Reliably and secrurely usable}
+   
+\end{description}
+
+There are some security properties that people may want which are not actually properties of authentication. That is, they are beyond to scope of authentication, but people may none-the-less consider them to be part of authentication:
+
+
+\begin{description}
+  \item[SSec] \propdescription{Defend server-side non-authentication secrets}
+    If Molly (a dog) stores location of her bones on some service,
+    and that service is fully breached (perhaps an insider attack)
+    then that data is compromised even if the authentication process for the service isn't.
+    End-to-end encryption is generally the most effective defense against this threat,
+    but it is not something that authentication schemes can provide.
+
+  \item[CSec] \propdescription{Defend client-side non-authentication secrets}
+    If the computer that Molly is using to manage the location of her buried bones is fully compromised,
+    then any of those secrets available on that device will be available to the attacker no matter how many factors the authentication system uses.
+    Contrast this with FS.
+  
+\end{description}
+
+There are other security properties we may wish of authentication systems, but for this discussion we have listed only a few of them.
+
+\section{MFA}
+
+It is not necessary to formally define MFA, but it is useful to review how it is typically presented.
+MFA is often presented as authentication requiring multiple factors, where the factors are of different types facing distinct threats.
+Factors types are often described as “something you know,” such as a password;
+“something you have,” such as a phone or specific device;
+and “something you are,” such as having a particular fingerprint.
+Although any of these factors can be stolen or compromised,
+the security stems from the fact that it requires different attacks and different attacker capabilities to comprise the different types.
+For example, an attacker who is in a position to capture a password may not be in a position to steal a phone or copy a fingerprint.
+
+There are an enormous number of different MFA schemes,
+but we will briefly discuss a few
+which can then serve as reference points for further discussion.
+
+\subsection{Chip \& PIN}
+
+The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrate security property FS in a distilled form and will provide a useful contrast when considering CSec.
+Physical procession of the card with the chip is required (something you have) along with the PIN (something you know).
+If either one is compromised while the other remains secure then the system remains secure.
+
+Chip and PIN meets many of the other technical requirements,
+for example the chip contains a unique, hard to guess long term secret that is never transmitted.
+Although chip and PIN is limited to a specific function and requires a specialized infrastructure, it provides an excellent example of MFA.
+
+\subsection{TOTP}\label{sec:totp}
+
+Time-based One Time Passwords (TOTP) will be most familiar to people as what Google Authenticator does, although other client apps are available.
+When enrolling the server generates a long term, unguessable shared secret. This is transmitted once to the client typically using a QR code.
+
+On authentication, the client and the server compute a number (typically six digits) that depends on the current time (rounded down to 30 second intervals) and the long term shared secret.
+If they have the same shared secrets and the clocks are not wildly off\footnote{I used to manage NTP servers. For me a clock that is off by a few hundred milliseconds is wildly off.} they will compute the same code.
+This will prove to the server that the client has access to that long term secret.
+No (useful) information about the long term secret is transmitted.
+The one time code is only replayable within a 30 to 90 second window.\footnote
+  {Servers will accept codes for the current 30 second period and also for the 30 seconds before and after the current period.}
+
+\subsection{Push/approval systems}\label{sec:push}
+
+In some schemes, such as those using SMS or Duo Security's product,
+a message is sent to the users phone.
+It may be a one time code to use (as is typical for SMS),
+or it may require the user to take some approval action.
+There is a great deal of variety of these systems,
+meeting different security requirements;
+but these provide notifications to users of authentication
+attempts (Notif).
+
+\section{1FA}
+
+For comparison it is useful to look at the security properties
+of authentication schemes which tend to be the only factor in single
+factor schemes or the primary factor in MFA schemes.
+
+\subsection{Traditional}
+The traditional scheme is transmitting a user created password to a server,
+which, if we are lucky, is storing a hashed version of that password.
+
+\subsection{PAKE}
+A Password-based Authenticated Key Exchange scheme provides mutual authentication
+without transmitting any secrets during enrollment.
+
+As it will be necessary for some of the discussion to follow,
+1Password's authentication system adds what we call
+Two-Secret Key Derivation (2SKD) to a PAKE~\autocite{1Password:whitepaper}.
+This involves a
+high entropy user secret that is mixed in client-side with their password.
+
+As a very rough summary, Table~\ref{tab:props} allows for easy
+(but approximate) comparison of the security properties of different
+authentication schemes.
+
+\begin{table}
+  \caption{Security of selected authentication mechanisms}\label{tab:props}
+  \begin{tabular}{lccccc}
+    \textbf{Property} & \textbf{Trad.}   & \textbf{TOTP}    & \textbf{Push}    & \textbf{PAKE}   & \textbf{PAKE+2SKD} \\
+    \hline
+    CI       & \cmark  & \cmark  & \cmark  & \cmark  & \cmark \\
+    SI       & \xmark  & \xmark  & \xmark  & \cmark  & \cmark \\
+    ZK+      & \xmark  & \cmark  & \cmark  & \cmark  & \cmark \\
+    BigH     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
+    Uniq     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
+    NoCrk    & \xmark  & \xmark  & \xmark  & \xmark  & \cmark \\
+    Notif    & \xmark  & \xmark  & \cmark  & \xmark  & \xmark \\
+    FS       & \xmark  & \cmark  & \cmark  & \xmark  & ?
+  \end{tabular}
+\end{table}
+
+\section{Authentication versus encryption}
+
+Before discussing user perceptions, we need to recognize the distinction between passwords used for authentication and passwords used for encryption.
+Because almost all passwords that people have encountered in their lives,
+along with the metaphors that are used, users cannot be expected to understand the distinction.
+Sadly, failure to understand that distinction can lead to catastrophic results.~\autocite{Blaze2011:cablegate}.
+
+A password used for authentication is part of the process of proving who you are to some system which accepts the proof or not. That verifier grant or deny access based on their decision. A password used for encryption is the source for a mathematical object that is required to transform data from a useless form into a useful one. There is no decision nor granting of access with encryption. Either the password works to transform the data or it doesn't.
+
+For a system which relies entirely on local encryption and does not have any authentication component, MFA is simply non-applicable;
+after all the “A” of “MFA” stands for “authentication.” 
+
+\section{Method}
+
+We have made no attempt quantifying demand for MFA discussed in \S\ref{sec:demand}.
+All such statements are based on personal and non-systematic impressions.
+Also note that we have millions of customers,
+and so strong demand from a small minority of them will still be a “great deal” from our perspective.
+
+We have made no attempt to count, much less content analyze, the discussion and exchanges mentioned below.
+We have not even gathered them or pointers to them.
+The various conversations occurred in our email customer support,
+on our discussion forums,
+in comments on our blog,
+in comments on other people's blogs,
+on Twitter,
+and in face to face conversations. 
+We did not attempt to make note of them at the time,
+and so there is every reason to suspect that what we report here is tainted by selective recall.\footnote
+  {This Selective Quote Method,
+  while not highly respected by experimental psychologists,
+  is accepted by some communities of scholars
+  as long as the paper using the method includes
+  at least one ill-informed reference to Thomas Kuhn
+  and takes pot shots at positivism.
+  Those have been omitted here in the interest of human decency.}
+
+All of the individuals we've had these discussions with are people who are already using a password manager or are actively looking at using one.
+This almost certainly means that they are highly atypical~\autocite{Stobert2014:agony}. 
+They are sophisticated network users and are aware of some security issues regarding authentication.
+
+\section{Demand for MFA in 1Password}\label{sec:demand}
+
+Prior to late 2015, 1Password usage and unlocking did not involve any
+authentication; it was entirely encryption based.
+Yet there was a great deal of demand for MFA.
+In our experience, this demand was motivated by individual's concern for their security
+instead of through institutional requirements (\textit{pace}~\autocite{CristofaroDFN13}).
+In a number of reviews of password managers, 1Password was criticized for not offering MFA, despite the fact that there was no authentication component at all to 1Password's security.
+
+At the time, we attempted to explain as best we could why MFA was inappropriate for our security architecture. The success of those explanations was almost certainly limited to the individuals who asked and who were in a position to engage in long technical discussions.
+
+When we introduced our service in early 2016 (public beta in late 2015) two things changed:
+(1)~We actively offered services designed for business-like organization, and (2)~we did introduce an authentication component.
+The demand for MFA became compelling,
+and some conversations with prospective business customers could be summarized as 
+
+“We need you to offer MFA.”\newline
+“It wouldn't add any meaningful security and would be largely security theater.”\newline
+“Give us that security theater or we cannot even consider your product.”
+
+We have acquiesced~\autocite{Fillion18:mfa}.
+
+\subsection{Why fight?}
+
+Prior to the introduction of an authentication component into 1Password, we were able to say ``no'' to requests for MFA, as it would have been entirely security theater.
+Although there may be cases where security theater is justified, we felt it would be harmful here.
+
+The most significant potential for harm is that the use of a theatrical MFA in 1Password might led people to chose weaker master passwords than they otherwise would. This would be a real reduction in data security for no compensating gain in either usability or other aspect of security.
+
+Another way in which MFA can be harmful is that it further confuses the issue of potential reset. We do not have the capacity to reset a master password or account if someone forgets their master password or losses their Secret Key. We attempt to make the clear to users when they first start using 1Password. An MFA factor, however, can be reset, and the existence of something that we can (and do) reset dilutes an important message we are trying to communicate.
+
+Finally, and most obviously, any additional complexity for users or in the code just introduces increased opportunities for things to go wrong.
+
+\section{Conversations}
+
+Typically
+when we ask people why they would like us to support MFA their answer is roughly “because it is more secure.” 
+If the discussion is occurring in a context in which it is helpful to follow that up,
+we begin by trying to explain why MFA may add little to the security of 1Password.
+Prior to launching the 1Password.com service, we would attempt to explain that
+1Password works solely by encryption and does not have an authentication component for which MFA could be applied.
+This is a remarkably subtle distinction,
+and we do not believe that we have succeeded at explaining it any but the
+most patient and curious individuals.
+
+With respect to the service, we would attempt to explain that our authentication process is not subject to the same threats that traditional password authentication is subject to.
+We would attempt to explain the different security properties of traditional password authentication and PAKE+2SKD.
+Again, we do not believe that we have succeeded in explaining this to all but
+a few individuals.
+
+During many of these conversations we explicitly invited individuals to let
+us know what they were seeking with MFA.
+And indeed, we have learned from these.
+We had not been \emph{explicitly} aware of Notif as a security property
+until people pointed it out to use.
+
+Although these conversations took their own individual courses,
+initial responses roughly fell into three categories:
+\begin{enumerate}
+  \item “I want it, and your competitors are offering it”, or \label{1resp:justbecause}
+  \item “It keeps me safe even if my Master Password is discovered”, or \label{1resp:FS}
+  \item “It allows me to log in from untrusted computers when I'm traveling.”\label{1resp:CSec}
+\end{enumerate}
+
+\subsection{More secure}
+Response~\ref{1resp:justbecause} typically indicates that the person does not wish to engage in a discussion, and so we shouldn't press them more on their reasons.
+Personally I do not encounter these, as I am usually only brought in to talk with people who do wish to discuss reasons for MFA.
+However, I have been told my our Sales team that this is what they have been hearing.
+
+People do perceive that MFA systems add security~\autocites{gunsonETAL2011:CS,CristofaroDFN13},
+and so it is no surprise that they wish to have it in a system that is designed to store and manage high value secrets, such as a password manager.
+There is no reason for people like me to demand that they think about what threats it defends against in the same way that I don't demand that people know why WPA2 WiFi security is enormously better than WEP.
+
+\subsection{The scariest error}
+
+Response~\ref{1resp:CSec} is terrifying.
+It is a failure to recognize the distinction between FS and CSec.
+This failure may lead people to view, manage, manipulate, and create high value
+secrets on a computer that believe may be compromised.
+
+Personally, I reply emphatically that anyone who says that it is safe to unlock a password manager on a compromised machine is dangerously misinformed. Depending on the situation, I may also point out what I believe the source of this misunderstanding to be.
+
+\begin{quotation}
+  Like others have mentioned, if I happen to have a key logger on my computer or if I use a public computer to access my account, my entire account key could be copied by someone. [...] I have 2FA set up on my email account, so I have to authenticate using 2FA any time I'm not at home.
+  [Forum user, January 2017]
+\end{quotation}
+
+And another person in the same discussion offered this as part of their reason
+for wanting MFA when unlocking 1Password:
+
+\begin{quotation}
+  With the speed zero day malware are created these days and with the tools and the many advanced techniques they have available, the frontier is fast shifting where users are at risk almost on a daily basis. This and the numerous corporate intrusions [...] I am not even sure I can trust that my own computer is truly secure despite the fact that it is behind an IDP/Firewall device.
+\end{quotation}
+
+Both of these individuals, as well as others in the same discussion,
+are clearly knowledgable and thoughtful about their security.\footnote{When I sought their permission to quote them here, one of this individuals asked whether our more recent introduction of MFA was because they had persuaded us or because they had exhausted us. I informed them that it was the latter.} 
+Yet they all believe that MFA would protect their use of 1Password on a compromised computer.
+
+In personal conversation I have been told by an extremely well qualified and experienced security expert that,
+ “MFA protects you even if one of your factors is totally compromised. That's the whole point.”
+With that comment, they were not limiting the “protects you” portion to authentication only.
+Only after I explicitly pointed out that FS only protects the authentication process that they realized the error.
+
+Naturally, when we encounter this we attempt to correct the misconception 
+clearly and emphatically.
+
+\subsection{Second factor}
+
+Response~\ref{1resp:FS} suggests that the person is familiar with the stated rational for for MFA.\@
+Yet they may not be familiar with threats against authentication mechanisms.
+If the major threats against traditional password authentication are password reuse and phishing,
+then someone who is using a password manager well may have little to gain from
+MFA because they have already reduced the threats to their primary factor.
+This fact, however, will only reduce demand for MFA if it is well understood.
+
+\section{Origins}
+
+It is not difficult to understand how someone could treat statements of FS as implying CSec.
+Given how dangerous a belief in CSec may be, it is disturbing to discover that
+many technically savvy people make this mistake and may even be advising others and spreading this dangerous notion.
+
+The popularity of MFA as a security measure may be in part due its promotion by a number of highly visible services.
+In some cases,
+such as Dropbox's introduction of TOTP~\autocite{Dropbox12:reuse},
+it may be a defense against password reuse by their customers.
+Recall that TOTP involves a unique and unguessable long term secret.
+
+In other cases, services may be promoting what appears to be MFA as providing
+alternative forms of authentication. 
+Password reset and account recovery is a notoriously difficult problem,
+and services may be using the ability to authenticate via one factor
+as sufficient proof of identity to allow for resetting the other factor.
+Services may be inviting people to believe that these systems increase account security
+even as they increase the risk of account take-over.
+
+\section{A call for research}
+
+To my knowledge there has not been research into what threats people may
+believe that MFA protects them from.
+It may be that this is an impossible question as it assumes that people
+have an implicit or explicit threat model.
+However, it may be possible to study sophisticated users' beliefs.
+
+Authentication, the threats to it, and the defenses against those threats is 
+is far more complicated and subtle than we can expect most people to understand.
+Therefore we must build systems which encourage behaviors that are in the users
+privacy and security interests without the expectation that the user must understand the threats.
+But that doesn't mean that we can't attempt to correct for dangerous misconceptions,
+such as the belief that using MFA makes it safe to manage secrets on a compromised computer.
+
+I have been jumping to conclusions about users' perceptions of MFA based on 
+conversations I've had over the years.
+I would like to know whether those conclusions are correct,
+and I am particularly concerned about those hypothesized perceptions which may be leading
+people to dangerous behavior.
+
+% I can't believe we are still using BibTeX instead of BiBLaTeX
+%\bibliographystyle{abbrv}
+%\bibliography{crypto}
+\printbibliography[title={REFERENCES},heading=bibnumbered]
+
+
+\end{document}
