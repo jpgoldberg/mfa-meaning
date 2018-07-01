@@ -47,6 +47,7 @@
 % Yes, I was told not to define new control sequences,
 % but this is one that should be easy for most converters to handle.
 \newcommand{\propdescription}[1]{\textit{#1}\newline}
+\newcommand{\prop}[1]{\textsf{#1}}
 
 %% lets see if we can use biblatex and biber, so I don't
 %% have to misc-ify my online entries
@@ -167,7 +168,7 @@ Before we can assess whether it does and whether it does so in ways that people 
     (See \S\ref{sec:push})
 
   \item[FS] \propdescription{Secure if some factor compromised}
-    This is the definitional characteristic of MFA.
+    This is the definitional characteristic of MFA.\@
     An MFA system remains secure as long as at least one factor is not compromised.
     But it must be noted that it is only the \emph{authentication} process that is protected.
     (cf.~CSec)
@@ -176,7 +177,7 @@ Before we can assess whether it does and whether it does so in ways that people 
    If the user loses/forgets their long term secrets, some recovery/reset procedure may be desired. Often times this comes at a very strong security cost in other respects, and so must be weighed carefully.
 
   \item[Alt] \propdescription{Alternative authentication}
-  Instead of requiring both factors to authenticate, either factor on its own is sufficient in case the user has lost one of them. This is closely related to Reset, and brings with it notable risks, such as account take-over through discovery of answers to “security questions”.
+  Instead of requiring both factors to authenticate, either factor on its own is sufficient in case the user has lost one of them. This is closely related to  \prop{Reset}, and brings with it notable risks, such as account take-over through discovery of answers to “security questions”.
 
   \item[Use] \propdescription{Reliably and secrurely usable}
    
@@ -196,7 +197,7 @@ There are some security properties that people may want which are not actually p
   \item[CSec] \propdescription{Defend client-side non-authentication secrets}
     If the computer that Molly is using to manage the location of her buried bones is fully compromised,
     then any of those secrets available on that device will be available to the attacker no matter how many factors the authentication system uses.
-    Contrast this with FS.
+    Contrast this with  \prop{FS}.
   
 \end{description}
 
@@ -219,13 +220,13 @@ which can then serve as reference points for further discussion.
 
 \subsection{Chip \& PIN}
 
-The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrate security property FS in a distilled form and will provide a useful contrast when considering CSec.
+The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrate security property  \prop{FS} in a distilled form and will provide a useful contrast when considering \prop{CSec}.
 Physical procession of the card with the chip is required (something you have) along with the PIN (something you know).
 If either one is compromised while the other remains secure then the system remains secure.
 
 Chip and PIN meets many of the other technical requirements,
 for example the chip contains a unique, hard to guess long term secret that is never transmitted.
-Although chip and PIN is limited to a specific function and requires a specialized infrastructure, it provides an excellent example of MFA.
+Although chip and PIN is limited to a specific function and requires a specialized infrastructure, it provides an excellent example of MFA.\@
 
 \subsection{TOTP}\label{sec:totp}
 
@@ -248,7 +249,7 @@ or it may require the user to take some approval action.
 There is a great deal of variety of these systems,
 meeting different security requirements;
 but these provide notifications to users of authentication
-attempts (Notif).
+attempts (\prop{Notif}).
 
 \section{1FA}
 
@@ -279,14 +280,14 @@ authentication schemes.
   \begin{tabular}{lccccc}
     \textbf{Property} & \textbf{Trad.}   & \textbf{TOTP}    & \textbf{Push}    & \textbf{PAKE}   & \textbf{PAKE+2SKD} \\
     \hline
-    CI       & \cmark  & \cmark  & \cmark  & \cmark  & \cmark \\
-    SI       & \xmark  & \xmark  & \xmark  & \cmark  & \cmark \\
-    ZK+      & \xmark  & \cmark  & \cmark  & \cmark  & \cmark \\
-    BigH     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
-    Uniq     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
-    NoCrk    & \xmark  & \xmark  & \xmark  & \xmark  & \cmark \\
-    Notif    & \xmark  & \xmark  & \cmark  & \xmark  & \xmark \\
-    FS       & \xmark  & \cmark  & \cmark  & \xmark  & ?
+    \prop{CI}       & \cmark  & \cmark  & \cmark  & \cmark  & \cmark \\
+    \prop{SI}       & \xmark  & \xmark  & \xmark  & \cmark  & \cmark \\
+    \prop{ZK+}      & \xmark  & \cmark  & \cmark  & \cmark  & \cmark \\
+    \prop{BigH}     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
+    \prop{Uniq}     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
+    \prop{NoCrk}    & \xmark  & \xmark  & \xmark  & \xmark  & \cmark \\
+    \prop{Notif}    & \xmark  & \xmark  & \cmark  & \xmark  & \xmark \\
+    \prop{FS}       & \xmark  & \cmark  & \cmark  & \xmark  & ?
   \end{tabular}
 \end{table}
 
@@ -335,7 +336,7 @@ They are sophisticated network users and are aware of some security issues regar
 
 Prior to late 2015, 1Password usage and unlocking did not involve any
 authentication; it was entirely encryption based.
-Yet there was a great deal of demand for MFA.
+Yet there was a great deal of demand for MFA.\@
 In our experience, this demand was motivated by individual's concern for their security
 instead of through institutional requirements (\textit{pace}~\autocite{CristofaroDFN13}).
 In a number of reviews of password managers, 1Password was criticized for not offering MFA, despite the fact that there was no authentication component at all to 1Password's security.
@@ -347,7 +348,7 @@ When we introduced our service in early 2016 (public beta in late 2015) two thin
 The demand for MFA became compelling,
 and some conversations with prospective business customers could be summarized as 
 
-“We need you to offer MFA.”\newline
+“We need you to offer MFA.\@”\newline
 “It wouldn't add any meaningful security and would be largely security theater.”\newline
 “Give us that security theater or we cannot even consider your product.”
 
@@ -382,9 +383,9 @@ Again, we do not believe that we have succeeded in explaining this to all but
 a few individuals.
 
 During many of these conversations we explicitly invited individuals to let
-us know what they were seeking with MFA.
+us know what they were seeking with MFA.\@
 And indeed, we have learned from these.
-We had not been \emph{explicitly} aware of Notif as a security property
+We had not been \emph{explicitly} aware of  \prop{Notif} as a security property
 until people pointed it out to use.
 
 Although these conversations took their own individual courses,
@@ -397,7 +398,7 @@ initial responses roughly fell into three categories:
 
 \subsection{More secure}
 Response~\ref{1resp:justbecause} typically indicates that the person does not wish to engage in a discussion, and so we shouldn't press them more on their reasons.
-Personally I do not encounter these, as I am usually only brought in to talk with people who do wish to discuss reasons for MFA.
+Personally I do not encounter these, as I am usually only brought in to talk with people who do wish to discuss reasons for MFA.\@
 However, I have been told my our Sales team that this is what they have been hearing.
 
 People do perceive that MFA systems add security~\autocites{gunsonETAL2011:CS,CristofaroDFN13},
@@ -407,7 +408,7 @@ There is no reason for people like me to demand that they think about what threa
 \subsection{The scariest error}
 
 Response~\ref{1resp:CSec} is terrifying.
-It is a failure to recognize the distinction between FS and CSec.
+It is a failure to recognize the distinction between  \prop{FS} and  \prop{CSec}.
 This failure may lead people to view, manage, manipulate, and create high value
 secrets on a computer that believe may be compromised.
 
@@ -432,7 +433,7 @@ Yet they all believe that MFA would protect their use of 1Password on a compromi
 In personal conversation I have been told by an extremely well qualified and experienced security expert that,
  “MFA protects you even if one of your factors is totally compromised. That's the whole point.”
 With that comment, they were not limiting the “protects you” portion to authentication only.
-Only after I explicitly pointed out that FS only protects the authentication process that they realized the error.
+Only after I explicitly pointed out that  \prop{FS} only protects the authentication process that they realized the error.
 
 Naturally, when we encounter this we attempt to correct the misconception 
 clearly and emphatically.
@@ -448,8 +449,8 @@ This fact, however, will only reduce demand for MFA if it is well understood.
 
 \section{Origins}
 
-It is not difficult to understand how someone could treat statements of FS as implying CSec.
-Given how dangerous a belief in CSec may be, it is disturbing to discover that
+It is not difficult to understand how someone could treat statements of  \prop{FS} as implying  \prop{CSec}.
+Given how dangerous a belief in  \prop{CSec} may be, it is disturbing to discover that
 many technically savvy people make this mistake and may even be advising others and spreading this dangerous notion.
 
 The popularity of MFA as a security measure may be in part due its promotion by a number of highly visible services.
