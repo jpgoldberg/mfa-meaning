@@ -6,10 +6,8 @@
 
 %% Exactly one of the two lines below should be uncommented
 %\iftrue % Soups format
-\iffalse % for proof reading
-
+\iffalse % for a legible version (useful for proof reading)
  \documentclass{soups} 
-
 \else
   \documentclass[12pt]{article} 
   \usepackage{nosoup}
@@ -100,7 +98,7 @@ It is based largely on experiences and conversations we have had with people req
 \section{Introduction}
 Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security. And our experience as the makers of the password manager, 1Password, is that many people have come to insist on it.
 
-The demand for MFA appears disproportionate to the security it offers in many circumstances. Our experience over many years in attempting to explain our resistance to offering MFA has resulted in numerous conversations in which we attempt to understand why people insist on MFA.\@
+The demand for MFA appears disproportionate to the security it offers in many circumstances. Our experience over many years in attempting to explain our resistance to offering MFA has resulted in numerous conversations in which we attempt to understand why people insist on MFA\@.
 
 There are real and legitimate security benefits to MFA in many circumstances, but those benefits may rarely be what people are seeking or expecting from MFA, and the particular security benefits may not always be applicable to the individual use case.
 Among the misconceptions we've observed, the most dangerous is the belief that
@@ -178,7 +176,7 @@ we need to to consider some of the security properties we may seek in an authent
     (See \S\ref{sec:push})
 
   \item[FS] \propdescription{Secure if some factor compromised}
-    This is the definitional characteristic of MFA.\@
+    This is the definitional characteristic of MFA\@.
     An MFA system remains secure as long as at least one factor is not compromised.
     But it must be noted that it is only the \emph{authentication} process that is protected.
     (cf.~CSec)
@@ -207,7 +205,7 @@ There are some security properties that people may want which are not actually p
   \item[CSec] \propdescription{Defend client-side non-authentication secrets}
     If the computer that Molly is using to manage the location of her buried bones is fully compromised,
     then any of those secrets available on that device will be available to the attacker no matter how many factors the authentication system uses.
-    Contrast this with  \prop{FS}.
+    Contrast this with \prop{FS}.
   
 \end{description}
 
@@ -351,7 +349,7 @@ They are sophisticated network users and are aware of some security issues regar
 
 Prior to late 2015, 1Password usage and unlocking did not involve any
 authentication; it was entirely encryption based.
-Yet there was a great deal of demand for MFA.\@
+Yet there was a great deal of demand for MFA\@.
 In our experience, this demand was motivated by individual's concern for their security
 instead of through institutional requirements (\textit{pace}~\autocite{CristofaroDFN13}).
 In a number of reviews of password managers, 1Password was criticized for not offering MFA, despite the fact that there was no authentication component at all to 1Password's security.
@@ -363,7 +361,7 @@ When we introduced our service in early 2016 (public beta in late 2015) two thin
 The demand for MFA became compelling,
 and some conversations with prospective business customers could be summarized as 
 
-“We need you to offer MFA.\@”\newline
+“We need you to offer MFA\@.”\newline
 “It wouldn't add any meaningful security and would be largely security theater.”\newline
 “Give us that security theater or we cannot even consider your product.”
 
@@ -398,7 +396,7 @@ Again, we do not believe that we have succeeded in explaining this to all but
 a few individuals.
 
 During many of these conversations we explicitly invited individuals to let
-us know what they were seeking with MFA.\@
+us know what they were seeking with MFA\@.
 And indeed, we have learned from these.
 We had not been \emph{explicitly} aware of  \prop{Notif} as a security property
 until people pointed it out to use.
@@ -413,7 +411,7 @@ initial responses roughly fell into three categories:
 
 \subsection{More secure}
 Response~\ref{1resp:justbecause} typically indicates that the person does not wish to engage in a discussion, and so we shouldn't press them more on their reasons.
-Personally I do not encounter these, as I am usually only brought in to talk with people who do wish to discuss reasons for MFA.\@
+Personally I do not encounter these, as I am usually only brought in to talk with people who do wish to discuss reasons for MFA\@.
 However, I have been told my our Sales team that this is what they have been hearing.
 
 People do perceive that MFA systems add security~\autocites{gunsonETAL2011:CS,CristofaroDFN13},
@@ -455,7 +453,7 @@ clearly and emphatically.
 
 \subsection{Second factor}
 
-Response~\ref{1resp:FS} suggests that the person is familiar with the stated rational for for MFA.\@
+Response~\ref{1resp:FS} suggests that the person is familiar with the stated rational for for MFA\@.
 Yet they may not be familiar with threats against authentication mechanisms.
 If the major threats against traditional password authentication are password reuse and phishing,
 then someone who is using a password manager well may have little to gain from
