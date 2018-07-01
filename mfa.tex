@@ -135,9 +135,13 @@ we need to to consider some of the security properties we may seek in an authent
 	 
     Password Authenticated Key Exchange protocols (PAKEs), which will be discussed below, provide mutual authentication.
 
-  \item[ZK+] \propdescription{Zero-knowledge +}
-  
-  There are a bunch of technically distinct security properties that together mean that during the authentication process no secret information is revealed to either party or to anyone who can eavesdrop on or manipulate the communication channel.
+  \item[ZK+] \propdescription{Zero-knowledge (and more)} 
+  There are a number of technically distinct security properties that together mean that during the authentication process
+  \begin{enumerate}
+	  \item No secret is sent to either party
+	  \item An eavesdropper can't learn anything that would help them replay a log in session
+	  \item An attacker who can tamper with the communication can only prevent successful authentication but cannot learn any secrets.
+	  \end{enumerate}
   
   Simple password authentication fails in multiple ways. It reveals the user's secret both to the server and to any eavesdropper.
    
@@ -212,7 +216,7 @@ There are other security properties we may wish of authentication systems, but f
 \section{MFA}
 
 It is not necessary to formally define MFA, but it is useful to review how it is typically presented.
-MFA is often presented as authentication requiring multiple factors, where the factors are of different types facing distinct threats.
+MFA is often presented as authentication requiring multiple factors, where the factors are of different types, each type facing distinct threats.
 Factors types are often described as “something you know,” such as a password;
 “something you have,” such as a phone or specific device;
 and “something you are,” such as having a particular fingerprint.
@@ -226,36 +230,42 @@ which can then serve as reference points for further discussion.
 
 \subsection{Chip \& PIN}
 
-The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrate security property  \prop{FS} in a distilled form and will provide a useful contrast when considering \prop{CSec}.
-Physical procession of the card with the chip is required (something you have) along with the PIN (something you know).
-If either one is compromised while the other remains secure then the system remains secure.
+The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrate security property \prop{FS} in a distilled form.
+Physical possession of the card with the chip is required (something you have) along with the PIN (something you know).
 
-Chip and PIN meets many of the other technical requirements,
-for example the chip contains a unique, hard to guess long term secret that is never transmitted.
-Although chip and PIN is limited to a specific function and requires a specialized infrastructure, it provides an excellent example of MFA.\@
+The chip contains a difficult to extract long term hard to guess (\prop{BigH}) and unique (\prop{Uniq}) secret. It can prove knowledge of that secret without revealing it (\prop{ZK+}). The chips make some (fallible) attempts to verify the authenticity of the card reader (\prop{SI}).
+
+The chip will behave differently depending on whether it has been provided with the correct PIN, thus ensuring that both factors are present at the same time and place. There is also no need for the long term secrets to be stored anywhere other than on the chips, and so this also meets that \prop{NoCrk} requirement.
+
+If either factor alone is compromised the authentication process remains  remains secure (\prop{FS}).
+An attacker with the PIN sans chip will not be able to fully authenticate; nor will an attacker with the chip sans PIN\@.
+
+
+Chip and PIN illustrates MFA at its best. Many of the security properties we might wish of an authentication process are maintained. It is feasible to do this given that it is limited to a very specific domain.
 
 \subsection{TOTP}\label{sec:totp}
 
 Time-based One Time Passwords (TOTP) will be most familiar to people as what Google Authenticator does, although other client apps are available.
-When enrolling the server generates a long term, unguessable shared secret. This is transmitted once to the client typically using a QR code.
+When signing up, the server generates a long term unique (\prop{Uniq}) and unguessable (\prop{BigH}) shared secret. This is transmitted once to the client typically through displaying a QR code. 
 
 On authentication, the client and the server compute a number (typically six digits) that depends on the current time (rounded down to 30 second intervals) and the long term shared secret.
-If they have the same shared secrets and the clocks are not wildly off\footnote{I used to manage NTP servers. For me a clock that is off by a few hundred milliseconds is wildly off.} they will compute the same code.
-This will prove to the server that the client has access to that long term secret.
-No (useful) information about the long term secret is transmitted.
-The one time code is only replayable within a 30 to 90 second window.\footnote
-  {Servers will accept codes for the current 30 second period and also for the 30 seconds before and after the current period.}
+If they have the same shared secrets and the clocks are not wildly off\footnote{I used to manage NTP servers. For me a clock that is off by a few hundred milliseconds is wildly off.} they will compute the same code. This will prove to the server that the client has access to that long term secret. No information about the long term secret is transmitted, and replay is limited to a 30 to 90 second period. Thus this largely has the \prop{ZK+} property.
+
+The long term secret is shared between the client and the server, and thus a server compromise means an immediate compromise of that secret. Thus TOTP fails to meet \prop{NoCrk}.
+
+Whether or not both factors are truly needed to authenticate is up to the operators of the service. Many services will allow people who have control of the registered email address and access to one factor or the other to by-pass the factor that they've lost or forgotten. This instead of requiring both factors (\prop{FS}), these systems will allow authentication through either factor (\prop{Alt}). Whether or not this is desirable, it is certainly not how the security claims of MFA are typically presented.
 
 \subsection{Push/approval systems}\label{sec:push}
 
 In some schemes, such as those using SMS or Duo Security's product,
-a message is sent to the users phone.
+a message is sent to the user's phone.
 It may be a one time code to use (as is typical for SMS),
 or it may require the user to take some approval action.
 There is a great deal of variety of these systems,
-meeting different security requirements;
-but these provide notifications to users of authentication
-attempts (\prop{Notif}).
+meeting different security requirements, but most achieve all of the properties that are seen with TOTP\@.
+
+Additionally these provide notifications to users of authentication
+attempts (\prop{Notif}), which can be quite valuable both in terms of real security and in meeting user expectations. As with TOTP, whether these act as requiring both factors (\prop{FS}) or as an alternative form of authentication (\prop{Alt}) is implementation dependent.
 
 \section{1FA}
 
@@ -264,8 +274,7 @@ of authentication schemes which tend to be the only factor in single
 factor schemes or the primary factor in MFA schemes.
 
 \subsection{Traditional}
-The traditional scheme is transmitting a user created password to a server,
-which, if we are lucky, is storing a hashed version of that password.
+The traditional scheme is transmitting a user created password to a server, which, if we are lucky, is storing a hashed version of that password. These only provide client authentication and fail at every other property we may desire.\footnote{There is one other property, Resistant to Pre-computation Attacks, that simple password authentication has and which is lacking from otherwise far more security schemes.~\autocite{JareckiETAL2018:OPAQUE}}
 
 \subsection{PAKE}
 A Password-based Authenticated Key Exchange scheme provides mutual authentication
