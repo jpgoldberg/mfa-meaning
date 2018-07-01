@@ -5,5 +5,7 @@ solicit comments from people who do not have github accounts) it is not really d
 
 1. I don't have the BibTeX source files here, so you won't be able to build until I do that.
 
-2. Building the SOUPS style version versus the legible version requires requires edits in the preamble of mfa.tex. 
+2. Building the SOUPS style version versus the legible version requires requires edits in the preamble of mfa.tex.
+
+3. Requires FontAwesome.otf be available, and relies on XeLaTeX (might work with LuaTeX, but untested)
 

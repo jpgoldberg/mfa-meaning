@@ -34,10 +34,14 @@
   \usepackage[utf8]{inputenc}
 \fi
 
+%% We are simply assuming XeLaTeX for everything.
+\usepackage{fontspec}
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 %\newcommand{\xmark}{\ding{55}}%
 \newcommand{\xmark}{\ding{53}}%
+
+\usepackage{fontawesome}
 
 \usepackage{flushend} % much better than balance, which doesn't handle footnotes
 \renewcommand{\topfraction}{0.99} % be more aggressive about text around floats
@@ -94,7 +98,7 @@ It is based largely on experiences and conversations we have had with people req
 
 
 \section{Introduction}
-Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security. And our experience -- as the makers of the password manager 1Password -- is that many people have come to insist on it.
+Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security. And our experience as the makers of the password manager, 1Password, is that many people have come to insist on it.
 
 The demand for MFA appears disproportionate to the security it offers in many circumstances. Our experience over many years in attempting to explain our resistance to offering MFA has resulted in numerous conversations in which we attempt to understand why people insist on MFA.\@
 
@@ -102,7 +106,7 @@ There are real and legitimate security benefits to MFA in many circumstances, bu
 Among the misconceptions we've observed, the most dangerous is the belief that
 MFA would make it safe to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
 
-We start out with the discussion of the security properties one might want from any authentication system and some of the subtle distinctions between authentication and encryption.
+We start out with the discussion of the security properties one might want from any authentication system and some of the distinctions between authentication and encryption.
 These distinctions and security properties are subtle and are probably not well understand by even by many experts. 
 We then talk about our experiences and discussions with customers, from which we've gained some idea of why people want MFA and what they believe it does for them.
 Finally, we call for research on expectations of MFA so that we do not have to rely on our intuitions and anecdotes.
@@ -111,12 +115,13 @@ Finally, we call for research on expectations of MFA so that we do not have to r
 
 Authentication, very very roughly, is the process of proving ones identity to some system or service.
 That service will either accept the proof or reject it.
-If accepted it will then grant access to some resource. In what follows I'm going to use terms like ``client'' and ``server'' with a great deal of imprecision. The client may narrowly be something computer program like a web-browser or it might more broadly be the user in combination with the web-browser.
+If accepted it will then grant access to some resource. In what follows I'm going to use terms like ``client'' and ``server'' with a great deal of imprecision. The client may narrowly be something like a computer program such as a web-browser or it might more broadly be the user in combination with the web-browser.
 
-The most familiar form of authentication for the context of this discussion is providing a password. A user provides an identifier (a username) and a password to their client software (a web browser) which then transmit this information to a server. The server performs some check to determine whether the password is correct for that identity, and grants access iff it is correct.
+The most familiar form of authentication for the context of this discussion is providing a password. A user provides an identifier (a username) and a password to their client software (a web browser) which then transmits this information to a server. The server performs some check to determine whether the password is correct for that identity, and grants access iff it is correct.
 
 MFA is (largely) intended to bolster the security of authentication.
-Before we can assess whether it does and whether it does so in ways that people expect it to, we need to to consider some of the properties we may seek in an authentication protocol.
+Before we can assess whether it does and whether it does so in ways that people expect it to,
+we need to to consider some of the security properties we may seek in an authentication protocol.
 
 \begin{description}
   \item[CI] \propdescription{Proof of client identity}
@@ -125,7 +130,8 @@ Before we can assess whether it does and whether it does so in ways that people 
 
   \item[SI] \propdescription{Proof of server identity}
     For most website logins this is not done during user authentication.
-    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag symbol\footnote{The handbag symbol might appear as a closed padlock to many individuals}. If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
+    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag\footnote{The handbag symbol might appear as a closed padlock to many individuals} symbol, “\faLock”.
+	If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
 	 
     Password Authenticated Key Exchange protocols (PAKEs), which will be discussed below, provide mutual authentication.
 
