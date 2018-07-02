@@ -39,7 +39,11 @@
 %\newcommand{\xmark}{\ding{55}}%
 \newcommand{\xmark}{\ding{53}}%
 
-\usepackage{fontawesome}
+% Fontawesome package and .otf are weird, leadning to peculiar artifacts.
+% See https://tex.stackexchange.com/questions/134121/fontawesome-icons-are-getting-too-big-using-xelatex
+
+% \usepackage{fontawesome}
+\usepackage{fontawesome5}
 
 \usepackage{flushend} % much better than balance, which doesn't handle footnotes
 \renewcommand{\topfraction}{0.99} % be more aggressive about text around floats
@@ -128,7 +132,7 @@ we need to to consider some of the security properties we may seek in an authent
 
   \item[SI] \propdescription{Proof of server identity}
     For most website logins this is not done during user authentication.
-    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag\footnote{The handbag symbol might appear as a closed padlock to many individuals.} symbol, “\faLock”.
+    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag\footnote{The handbag symbol might appear as a closed padlock to many individuals.~\cite{felt2016rethinking}} symbol, “{\small\faLock}”.
 	If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
 	 
     Mutual authentication is combination of \prop{CI} and \prop{SI}.
