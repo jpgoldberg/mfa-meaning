@@ -5,8 +5,8 @@
 
 
 %% Exactly one of the two lines below should be uncommented
-\iftrue % Soups format
-%\iffalse % for a legible version (useful for proof reading)
+%\iftrue % Soups format
+\iffalse % for a legible version (useful for proof reading)
  \documentclass{soups} 
  \usepackage{nopageno}
 \else
@@ -87,16 +87,7 @@
 \maketitle
 \begin{abstract}
 
-Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security,
-and many explicitly security conscious individuals have come to demand it of various services.
-The security properties we may wish from authentication are complicated and subtle,
-and MFA's contribution to those properties is also far from simple or obvious.
-It is therefore to be expected that most users' understanding of MFA will contain errors, some of which may be dangerous.
-
-We discuss the security properties of MFA, the security expectations of MFA, and the causes for some of the mismatches between them.
-
-This is a practitioner presentation with no systematic data collection or analysis.
-It is based largely on experiences and conversations we have had with people requesting MFA for our product, a password manager.
+ 
 \end{abstract}
 
 
@@ -110,7 +101,7 @@ Among the misconceptions we've observed, the most dangerous is the belief that
 MFA makes it safe to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
 
 We start out with the discussion of the security properties one might want from any authentication system and some of the distinctions between authentication and encryption.
-These distinctions and security properties are subtle and are probably not well understand by even by many experts. 
+These distinctions and security properties are subtle and are probably not well-understood by even by many experts. 
 We then talk about our experiences and discussions with customers, from which we've gained some idea of why people want MFA and what they believe it does for them.
 Finally, we call for research on expectations of MFA so that we do not have to rely on our intuitions and anecdotes.
 
