@@ -9,3 +9,7 @@ solicit comments from people who do not have github accounts) it is not really d
 
 3. Requires FontAwesome.otf be available, and relies on XeLaTeX (might work with LuaTeX, but untested)
 
+## Built files
+
+Included here is a [PDF of the paper](mfa.pdf) and a PDF of the [slides used](MFA-presentation.pdf) (Be sure to view that in Single Page mode so that overlays kinda work).
+
