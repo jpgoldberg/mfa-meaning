@@ -27,9 +27,16 @@
 \usepackage{ifxetex}
 \ifxetex
   \usepackage{fontspec}
-  \setmainfont{Times New Roman}
+  % Following assumes that TeX Gyre Pagella has been installed as a system
+  % or user font. If it fails for you, find the font files
+  %   texgyrepagella-{regular,bold,italic,bolditalic}.otf
+  % in your TeX distribution (try texmf/opentype/public/tex-gyre) and
+  % double click on them.
+  \setmainfont{TeX Gyre Pagella} 
+  % Same comment as above, but s/pagella/heros/g
+  \setsansfont{TeX Gyre Heros}
 \else
-  \usepackage{times} % Really? What a truly terrible choice.
+  \usepackage{newpx}
   \usepackage[utf8]{inputenc}
 \fi
 
