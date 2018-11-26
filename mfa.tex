@@ -2,6 +2,7 @@
 
 \usepackage{graphicx}
 \usepackage{authblk}
+\usepackage{booktabs}
 \usepackage{ifxetex}
 \ifxetex
   \usepackage{fontspec}
@@ -243,8 +244,9 @@ authentication schemes.
 
 \begin{table}
   \begin{tabular}{lcccccc}
+    \toprule
     \textbf{Property} & \textbf{Trad.}   & \textbf{TOTP}    & \textbf{Push}  & \textbf{WebAuthn}  & \textbf{PAKE}   & \textbf{PAKE+2SKD} \\
-    \hline
+    \midrule
     \prop{CI}       & \cmark  & \cmark  & \cmark  & \cmark & \cmark  & \cmark \\
     \prop{SI}       & \xmark  & \xmark  & \xmark  & \cmark & \cmark  & \cmark \\
     \prop{ZK+}      & \xmark  & \cmark  & \cmark  & \cmark & \cmark  & \cmark \\
@@ -252,7 +254,8 @@ authentication schemes.
     \prop{Uniq}     & \xmark  & \cmark  & ?       & \cmark & \xmark  & \cmark \\
     \prop{NoCrk}    & \xmark  & \xmark  & \xmark  & \cmark & \xmark  & \cmark \\
     \prop{Notif}    & \xmark  & \xmark  & \cmark  & \xmark & \xmark  & \xmark \\
-    \prop{FS}       & \xmark  & \cmark  & \cmark  & \cmark & \xmark  & ?
+    \prop{FS}       & \xmark  & \cmark  & \cmark  & \cmark & \xmark  & ?      \\
+    \bottomrule
   \end{tabular}
   \caption[Security properties of selected authentication mechanisms]
       {Security properties of selected authentication mechanisms.
