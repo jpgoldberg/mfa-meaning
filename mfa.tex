@@ -40,7 +40,7 @@
 %\newcommand{\xmark}{\ding{55}}%
 \newcommand{\xmark}{\ding{53}}%
 
-% Fontawesome package and .otf are weird, leadning to peculiar artifacts.
+% Fontawesome package and .otf are weird, leading to peculiar artifacts.
 % See https://tex.stackexchange.com/questions/134121/fontawesome-icons-are-getting-too-big-using-xelatex
 
 % \usepackage{fontawesome}
@@ -291,19 +291,28 @@ As a very rough summary, Table~\ref{tab:props} allows for easy
 authentication schemes.
 
 \begin{table}
-  \caption{Security of selected authentication mechanisms}\label{tab:props}
-  \begin{tabular}{lccccc}
-    \textbf{Property} & \textbf{Trad.}   & \textbf{TOTP}    & \textbf{Push}    & \textbf{PAKE}   & \textbf{PAKE+2SKD} \\
+  \begin{tabular}{lcccccc}
+    \textbf{Property} & \textbf{Trad.}   & \textbf{TOTP}    & \textbf{Push}  & \textbf{WebAuthn}  & \textbf{PAKE}   & \textbf{PAKE+2SKD} \\
     \hline
-    \prop{CI}       & \cmark  & \cmark  & \cmark  & \cmark  & \cmark \\
-    \prop{SI}       & \xmark  & \xmark  & \xmark  & \cmark  & \cmark \\
-    \prop{ZK+}      & \xmark  & \cmark  & \cmark  & \cmark  & \cmark \\
-    \prop{BigH}     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
-    \prop{Uniq}     & \xmark  & \cmark  & ?       & \xmark  & \cmark \\
-    \prop{NoCrk}    & \xmark  & \xmark  & \xmark  & \xmark  & \cmark \\
-    \prop{Notif}    & \xmark  & \xmark  & \cmark  & \xmark  & \xmark \\
-    \prop{FS}       & \xmark  & \cmark  & \cmark  & \xmark  & ?
+    \prop{CI}       & \cmark  & \cmark  & \cmark  & \cmark & \cmark  & \cmark \\
+    \prop{SI}       & \xmark  & \xmark  & \xmark  & \cmark & \cmark  & \cmark \\
+    \prop{ZK+}      & \xmark  & \cmark  & \cmark  & \cmark & \cmark  & \cmark \\
+    \prop{BigH}     & \xmark  & \cmark  & ?       & \cmark & \xmark  & \cmark \\
+    \prop{Uniq}     & \xmark  & \cmark  & ?       & \cmark & \xmark  & \cmark \\
+    \prop{NoCrk}    & \xmark  & \xmark  & \xmark  & \cmark & \xmark  & \cmark \\
+    \prop{Notif}    & \xmark  & \xmark  & \cmark  & \xmark & \xmark  & \xmark \\
+    \prop{FS}       & \xmark  & \cmark  & \cmark  & \cmark & \xmark  & ?
   \end{tabular}
+  \caption[Security properties of selected authentication mechanisms]
+      {Security properties of selected authentication mechanisms.
+        \prop{CI}: Client proves identity.
+        \prop{SI}: Server proves identity.
+        \prop{ZK+}: No secrets transmitted.
+        \prop{BigH}: Long term secret is unguessable.
+        \prop{Uniq}: Long term secret is unique.
+        \prop{NoCrk}: Server stored verify can't be used for cracking.
+        \prop{Notif}: User notified of (failed) attempts.
+        \prop{FS}: Multiple factors.}\label{tab:props}
 \end{table}
 
 \section{Authentication versus encryption}
