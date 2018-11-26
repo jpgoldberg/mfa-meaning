@@ -1,9 +1,7 @@
 \documentclass[12pt]{article} 
-\usepackage{nosoup}
-\usepackage{setspace}
-\onehalfspacing
 
 \usepackage{graphicx}
+\usepackage{authblk}
 \usepackage{ifxetex}
 \ifxetex
   \usepackage{fontspec}
@@ -27,10 +25,6 @@
 %\newcommand{\xmark}{\ding{55}}%
 \newcommand{\xmark}{\ding{53}}%
 
-% Fontawesome package and .otf are weird, leading to peculiar artifacts.
-% See https://tex.stackexchange.com/questions/134121/fontawesome-icons-are-getting-too-big-using-xelatex
-
-% \usepackage{fontawesome}
 \usepackage{fontawesome5}
 
 \newcommand{\propdescription}[1]{\textit{#1}\newline}
@@ -42,24 +36,11 @@
 \begin{document}
 
 \title{What does ``MFA'' mean?}
-\subtitle{Conversations, anecdotes, and a call for research}
 
-\author{
-  \alignauthor
-  Jeffrey Goldberg\\
-       \affaddr{AgileBits, Inc.}\\
-       \affaddr{317 Adelaide Street West}\\
-       \affaddr{Toronto, Ontario, Canada}\\
-       \email{jeff@agilebits.com}
-}
-
+\author{Jeffrey Goldberg}
+\affil{1Password\\ jeff@1Password.com}
 
 \maketitle
-\begin{abstract}
-
- 
-\end{abstract}
-
 
 \section{Introduction}
 Multi-factor (or Two-factor) Authentication (MFA or 2FA) is widely recommended to people as a measure they should adopt to improve their security. And in our experience as the makers of the password manager, 1Password, many people have come to insist on it.
