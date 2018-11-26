@@ -28,6 +28,10 @@
 
 \usepackage{fontawesome5}
 
+\usepackage{xcolor}
+\definecolor{padlockcolor}{rgb}{.24,.70,.52}
+
+
 \newcommand{\propdescription}[1]{\textit{#1}\newline}
 \newcommand{\prop}[1]{\textsf{#1}}
 
@@ -76,7 +80,7 @@ we need to to consider some of the security properties we may seek in an authent
 
   \item[SI] \propdescription{Proof of server identity}
     For most website logins this is not done during user authentication.
-    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag\footnote{The handbag symbol might appear as a closed padlock to many individuals.~\cite{felt2016rethinking}} symbol, “{\small\faLock}”.
+    Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag\footnote{The handbag symbol might appear as a closed padlock to many individuals.~\cite{felt2016rethinking}} symbol, “{\color{padlockcolor}\small\faLock}”.
 	If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
 	 
     Mutual authentication is combination of \prop{CI} and \prop{SI}.
