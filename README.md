@@ -1,6 +1,6 @@
 # What does “MFA” mean?
 
-Versions of what is built here have been presented at
+Versions of the paper here have been presented at
 
 - [Who are you (WAY)? Adventures in Authentication, 2018](https://wayworkshop.org/2018/) as  ["What does "MFA" mean? Conversations, Anecdotes, and a Call for Research" (PDF)](https://wayworkshop.org/2018/papers/way2018-goldberg.pdf)
   
