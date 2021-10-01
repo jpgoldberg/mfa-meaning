@@ -48,7 +48,7 @@
 \maketitle
 
 \begin{abstract}
-  Multi-factor authentication (MFA) is widely recommended to people as a measure they should adopt to improve their security. Yet the security that it provides varies dramatically from system to system. Furthermore the additional security resulting from MFA is not always what users expect. For example, users may expect that the security comes from involving different sorts of factors, while the actual security of a scheme may arise from the use of an unguessable and secret which is never transmitted. In other usages apparent MFA may be used for account reset, thus making account compromise easier.
+  Multi-factor authentication (MFA) is widely recommended to people as a measure they should adopt to improve their security. Yet the security that it provides varies dramatically from system to system. Furthermore the additional security resulting from MFA is not always what users expect. For example, users may expect that the security comes from involving different sorts of factors, while the actual security of a scheme may arise from the use of an unguessable secret which is never transmitted. In other usages apparent MFA may be used for account reset, thus making account compromise easier.
 
   Misunderstandings of the security properties offered by any particular MFA system may lead people to engage in dangerous behavior that they otherwise wouldn't enage in.
   Perhaps the most dangerous misconception we've encountered is the belief that
@@ -56,7 +56,7 @@
 
   In the case of an encryption based password manager, where authentication plays only a minor role in the system's security, offering MFA may lead people to use weaker master passwords than they otherwise would. Thus users may strengthen a less crucial part of their security (authentication), while weakening a far more important component (the master password used to encrypt their data).
 
-  We argue that when offering MFA it is important to understand what the often subtle but actual security properties are. Those benefits need to weighed against the security damage that may result from behaviors that MFA usage might encourage. Additionally, MFA should be presented to users in ways that do not invite dangerous misconceptions. 
+  I argue that when offering MFA it is important to understand what the often subtle but actual security properties are. Those benefits need to weighed against the security damage that may result from behaviors that MFA usage might encourage. Additionally, MFA should be presented to users in ways that do not invite dangerous misconceptions. 
 \end{abstract}
 
 
@@ -99,7 +99,7 @@ we need to to consider some of the security properties we may seek in an authent
 	 
     Mutual authentication is combination of \prop{CI} and \prop{SI}.
 
-  \item[ZK+] \propdescription{Zero-knowledge (and more)} 
+  \item[ZK+] \propdescription{Zero-knowledge (and more)}\footnote{I am using the term “zero-knowledge” more broadly than it is defined in the cryptographic literature. True zero-knowledge systems achieve the security properties I list, but through a very specific mechanism.} 
   There are a number of technically distinct security properties that together mean that during the authentication process
   \begin{enumerate}
 	  \item No secret is sent to either party
@@ -282,7 +282,7 @@ authentication schemes.
         \prop{ZK+}: No secrets transmitted.
         \prop{BigH}: Long term secret is unguessable.
         \prop{Uniq}: Long term secret is unique.
-        \prop{NoCrk}: Server stored verify can't be used for cracking.
+        \prop{NoCrk}: Server stored verifier can't be used for cracking.
         \prop{Notif}: User notified of (failed) attempts.
         \prop{FS}: Multiple factors.}\label{tab:props}
 \end{table}
