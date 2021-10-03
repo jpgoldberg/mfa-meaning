@@ -1,23 +1,19 @@
+% !TEX TS-program = xelatex
+% !BIB program = biber
 \documentclass[12pt]{article} 
 
 \usepackage{graphicx}
 \usepackage{authblk}
 \usepackage{booktabs}
-\usepackage{ifxetex}
-\ifxetex
-  \usepackage{fontspec}
+\usepackage{fontspec}
   % Following assumes that TeX Gyre Pagella has been installed as a system
   % or user font. If it fails for you, find the font files
   %   texgyrepagella-{regular,bold,italic,bolditalic}.otf
   % in your TeX distribution (try texmf/opentype/public/tex-gyre) and
   % double click on them.
-  \setmainfont{TeX Gyre Pagella} 
+\setmainfont{TeX Gyre Pagella} 
   % Same comment as above, but s/pagella/heros/g
-  \setsansfont{TeX Gyre Heros}
-\else
-  \usepackage{newpx}
-  \usepackage[utf8]{inputenc}
-\fi
+\setsansfont{TeX Gyre Heros}
 
 %% We are simply assuming XeLaTeX for everything.
 \usepackage{fontspec}
@@ -37,6 +33,7 @@
 
 \usepackage[style=apa]{biblatex}
 \addbibresource{crypto.bib}
+% \addbibresource{mfa.bib}
 
 \begin{document}
 
