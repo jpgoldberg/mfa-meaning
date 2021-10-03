@@ -38,6 +38,7 @@
 \begin{document}
 
 \title{What does ``MFA'' mean?}
+\date{November 20, 2018\thanks{Last tweek: \today }}
 
 \author{Jeffrey Goldberg}
 \affil{1Password\\ jeff@1Password.com}
@@ -45,17 +46,16 @@
 \maketitle
 
 \begin{abstract}
-  Multi-factor authentication (MFA) is widely recommended to people as a measure they should adopt to improve their security. Yet the security that it provides varies dramatically from system to system. Furthermore the additional security resulting from MFA is not always what users expect. For example, users may expect that the security comes from involving different sorts of factors, while the actual security of a scheme may arise from the use of an unguessable secret which is never transmitted. In other usages apparent MFA may be used for account reset, thus making account compromise easier.
+  Multi-factor authentication (MFA) is widely recommended as a measure to improve security. Yet the security that it provides varies dramatically from system to system. Furthermore the additional security resulting from MFA is not always what users expect. For example, users may expect that the security comes from involving different sorts of factors, while the actual security of a scheme may arise from the use of an unguessable secret which is never transmitted. In other usages apparent MFA may be used for account reset, thus making account compromise easier.
 
-  Misunderstandings of the security properties offered by any particular MFA system may lead people to engage in dangerous behavior that they otherwise wouldn't enage in.
+  Misunderstandings of the security properties offered by any particular MFA system may lead people to engage in dangerous behavior that they otherwise wouldn't engage in.
   Perhaps the most dangerous misconception we've encountered is the belief that
   MFA makes it safe to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
 
-  In the case of an encryption based password manager, where authentication plays only a minor role in the system's security, offering MFA may lead people to use weaker master passwords than they otherwise would. Thus users may strengthen a less crucial part of their security (authentication), while weakening a far more important component (the master password used to encrypt their data).
+  In the case of an encryption based password manager offering MFA may lead people to use weaker master passwords than they otherwise would. Thus users may strengthen a less crucial part of their security (authentication), while weakening a far more important component (the master password used to encrypt their data).
 
   I argue that when offering MFA it is important to understand what the often subtle but actual security properties are. Those benefits need to weighed against the security damage that may result from behaviors that MFA usage might encourage. Additionally, MFA should be presented to users in ways that do not invite dangerous misconceptions. 
 \end{abstract}
-
 
 
 \section{Introduction}
@@ -126,11 +126,10 @@ we need to to consider some of the security properties we may seek in an authent
    provide those secrets immediately.
    
    Hashed passwords and asymmetric PAKE verifiers can be used
-   to verify password guessing attempts
-   can all be useful in password cracking attempts.
+   to verify password guessing attempts, and so they do not satisfy this desideratum.
 
    1Password's Two-Secret Key Derivation~\autocite{1Password:whitepaper}
-   and Tarsnap's key files \autocite{mwlucas:tarsnap}
+   and Tar\-snap's key files \autocite{mwlucas:tarsnap}
    are examples where nothing crackable is stored server-side.
 
   \item[Notif] \propdescription{User notification of login attempts}
@@ -150,8 +149,8 @@ we need to to consider some of the security properties we may seek in an authent
   \item[Alt] \propdescription{Alternative authentication}
   Instead of requiring both factors to authenticate, either factor on its own is sufficient in case the user has lost one of them. This is closely related to  \prop{Reset}, and brings with it notable risks, such as account take-over through discovery of answers to “security questions”.
 
-  \item[Use] \propdescription{Reliably and secrurely usable}
-   
+  \item[Use] \propdescription{Reliably and securely usable}
+
 \end{description}
 
 There are some security properties that people may want which are not actually properties of authentication. That is, they are beyond to scope of authentication, but people may none-the-less consider them to be part of authentication:
@@ -247,7 +246,6 @@ The traditional scheme is transmitting a user created password to a server, whic
 \subsection{PAKE}
 A Password-based Authenticated Key Exchange scheme (PAKE) provides mutual authentication (\prop{CI} and \prop{SI}) without transmitting any secrets during enrollment (\prop{ZK+}). The protocol involves mathematical computation which cannot be completed unless each party has access to their respective long term secrets.
 
-As it will be necessary for some of the discussion to follow,
 1Password's authentication system adds what we call
 Two-Secret Key Derivation (2SKD) to a PAKE~\autocite{1Password:whitepaper}.
 This involves a
@@ -373,7 +371,7 @@ and we do not believe that we have succeeded at explaining it any but the
 most patient and curious individuals.
 
 With respect to the service, we would attempt to explain that our authentication process is not subject to the same threats that traditional password authentication is subject to.
-We would attempt to explain the different security properties of traditional password authentication and PAKE+2SKD.
+We would attempt to explain the different security properties between our use of PAKE+2SKD and traditional password authentication.
 Again, we do not believe that we have succeeded in explaining this to all but
 a few individuals.
 
@@ -467,12 +465,10 @@ This doesn't mean that we can't attempt to correct for dangerous misconceptions,
 such as the belief that using MFA makes it safe to manage secrets on a compromised computer.
 
 I have been jumping to conclusions about users' perceptions of MFA based on 
-conversations I've had over the years.
-I would like to know whether those conclusions are correct,
-and I am particularly concerned about those hypothesized perceptions which may be leading
-people to dangerous behavior.
+conversations we have  had over the years.
+It would be very nice to know  whether those conclusions are correct,particularly with respect to those hypothesized perceptions
+which may be leading people to dangerous behavior.
 
 \printbibliography
-
 
 \end{document}
