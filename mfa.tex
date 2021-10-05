@@ -28,21 +28,42 @@
 \definecolor{padlockcolor}{rgb}{.24,.70,.52}
 
 
-\newcommand{\propdescription}[1]{\textit{#1}\newline}
+\usepackage{enumitem}
+\newcommand{\propdescription}[1]{\textit{#1}\hspace*{\fill}\linebreak }
 \newcommand{\prop}[1]{\textsf{#1}}
+
+\newlist{desiderata}{description}{1}
+\setlist[desiderata]{labelwidth=3em,
+  align=right,
+  format={\normalfont\prop },
+  labelsep=1em,
+  listparindent=0pt,
+  leftmargin=4em}
 
 \usepackage[style=apa]{biblatex}
 \addbibresource{crypto.bib}
 % \addbibresource{mfa.bib}
 \usepackage{xurl} % load after biblatex 
 
-\begin{document}
+%% apparently there is no clean way to have a particular \footnote or \thanks
+%% have no mark. So adapting from 
+%% https://tex.stackexchange.com/a/455143/31771
+%% I set the first symbol to be used empty {}.
+%% This is why people hate TeX
 
-\title{What does ``MFA'' mean?}
+\makeatletter
+\def\@fnsymbol#1{\ensuremath{\ifcase#1\or {}\or *\or \dagger\or \ddagger\or
+   \mathsection\or \mathparagraph\or \|\or **\or \dagger\dagger
+   \or \ddagger\ddagger \else\@ctrerr\fi}}
+\makeatother
+
+\title{What does ``MFA'' mean?\thanks{Source and resources: \protect\url{https://github.com/jpgoldberg/mfa-meaning}}}
 \date{November 20, 2018\thanks{Last tweek: \today }}
 
 \author{Jeffrey Goldberg}
 \affil{1Password\\ jeff@1Password.com}
+
+\begin{document}
 
 \maketitle
 
@@ -85,7 +106,7 @@ MFA is (largely) intended to bolster the security of authentication.
 Before we can assess whether it does and whether it does so in ways that people expect it to,
 we need to to consider some of the security properties we may seek in an authentication protocol.
 
-\begin{description}
+\begin{desiderata}
   \item[CI] \propdescription{Proof of client identity}
     The client should prove to the server that it is who it says it is.
     In normal password authentication this is done by the client transmitting a secret, the password, to the server.
@@ -93,11 +114,11 @@ we need to to consider some of the security properties we may seek in an authent
   \item[SI] \propdescription{Proof of server identity}
     For most website logins this is not done during user authentication.
     Instead, we typically rely on the TLS/X509 infrastructure to authenticate websites to the browser. If the browser accepts the authenticity of the site it may display the little handbag\footnote{The handbag symbol might appear as a closed padlock to many individuals.~\cite{felt2016rethinking}} symbol, “{\color{padlockcolor}\small\faLock}”.
-	If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
+	  If it rejects the authenticity, it will attempt to alert the user in some meaningful and practical way.
 	 
     Mutual authentication is combination of \prop{CI} and \prop{SI}.
 
-  \item[ZK+] \propdescription{Zero-knowledge (and more)}\footnote{I am using the term “zero-knowledge” more broadly than it is defined in the cryptographic literature. True zero-knowledge systems achieve the security properties I list, but through a very specific mechanism.} 
+  \item[ZK+] \propdescription{Zero-knowledge (and more)\footnote{I am using the term “zero-knowledge” more broadly than it is defined in the cryptographic literature. True zero-knowledge systems achieve the security properties I list, but through a very specific mechanism.}}
   There are a number of technically distinct security properties that together mean that during the authentication process
   \begin{enumerate}
 	  \item No secret is sent to either party
@@ -152,12 +173,12 @@ we need to to consider some of the security properties we may seek in an authent
 
   \item[Use] \propdescription{Reliably and securely usable}
 
-\end{description}
+\end{desiderata}
 
 There are some security properties that people may want which are not actually properties of authentication. That is, they are beyond to scope of authentication, but people may none-the-less consider them to be part of authentication:
 
 
-\begin{description}
+\begin{desiderata}
   \item[SSec] \propdescription{Defend server-side non-authentication secrets}
     If Molly (a dog) stores location of her bones on some service,
     and that service is fully breached (perhaps an insider attack)
@@ -170,7 +191,7 @@ There are some security properties that people may want which are not actually p
     then any of those secrets available on that device will be available to the attacker no matter how many factors the authentication system uses.
     Contrast this with \prop{FS}.
   
-\end{description}
+\end{desiderata}
 
 There are other security properties we may wish of authentication systems, but for this discussion we have listed only a few of them.
 
