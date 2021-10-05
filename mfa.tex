@@ -68,15 +68,15 @@
 \maketitle
 
 \begin{abstract}
-  Multi-factor authentication (MFA) is widely recommended as a measure to improve security. Yet the security that it provides varies dramatically from system to system. Furthermore the additional security resulting from MFA is not always what users expect. For example, users may expect that the security comes from involving different sorts of factors, while the actual security of a scheme may arise from the use of an unguessable secret which is never transmitted. In other usages apparent MFA may be used for account reset, thus making account compromise easier.
-
+  Multi-factor authentication (MFA) is widely recommended as a measure to improve security. Yet the security that it provides varies dramatically from system to system.
   Misunderstandings of the security properties offered by any particular MFA system may lead people to engage in dangerous behavior that they otherwise wouldn't engage in.
-  Perhaps the most dangerous misconception we've encountered is the belief that
-  MFA makes it safe to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
 
-  In the case of an encryption based password manager offering MFA may lead people to use weaker master passwords than they otherwise would. Thus users may strengthen a less crucial part of their security (authentication), while weakening a far more important component (the master password used to encrypt their data).
+  We have observed that some users believe MFA makes it safe for them to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
+  Another is that the use of MFA may lead people to use weaker encryption passwords,
+  thereby strengthening a less crucial part of their security (authentication), while weakening a far more important component.
 
-  I argue that when offering MFA it is important to understand what the often subtle but actual security properties are. Those benefits need to weighed against the security damage that may result from behaviors that MFA usage might encourage. Additionally, MFA should be presented to users in ways that do not invite dangerous misconceptions. 
+  The benefits of offering MFA must be weighed against the potential security damage that may result from behaviors that MFA usage might encourage.
+  Either MFA security properties need to be communicated effectively to users or its actual security properties need to be brought into line with users' expectations. 
 \end{abstract}
 
 
