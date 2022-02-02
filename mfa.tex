@@ -90,7 +90,7 @@ Among the misconceptions we've observed, the most dangerous is the belief that
 MFA makes it safe to handle secrets on a compromised computer as long as some other authentication factor remains uncompromised.
 
 We start out with the discussion of the security properties one might want from any authentication system and some of the distinctions between authentication and encryption.
-These distinctions and security properties are subtle and are probably not well-understood by even by many experts. 
+These distinctions and security properties are subtle and are probably not well-understood even by many experts. 
 We then talk about our experiences and discussions with customers, from which we've gained some idea of why people want MFA and what they believe it does for them.
 Finally, we call for research on expectations of MFA so that we do not have to rely on our intuitions and anecdotes.
 
@@ -100,7 +100,7 @@ Authentication, very very roughly, is the process of proving ones identity to so
 That service will either accept the proof or reject it.
 If accepted, it will then grant access to some resource. In what follows I'm going to use terms like ``client'' and ``server'' with a great deal of imprecision. The client may narrowly be something like a computer program such as a web-browser or might, more broadly, be the user in combination with the web-browser.
 
-The most familiar form of authentication for the context of this discussion is providing a password. A user provides an identifier (a username) and a password to their client software (a web browser) which then transmits this information to a server. The server performs some check to determine whether the password is correct for that identity, and grants access iff it is correct.
+The most familiar form of authentication for the context of this discussion is providing a password. A user provides an identifier (a username) and a password to their client software (a web browser) which then transmits this information to a server. The server performs some check to determine whether the password is correct for that identity, and grants access if and only if it is correct.
 
 MFA is (largely) intended to bolster the security of authentication.
 Before we can assess whether it does and whether it does so in ways that people expect it to,
@@ -175,7 +175,7 @@ we need to to consider some of the security properties we may seek in an authent
 
 \end{desiderata}
 
-There are some security properties that people may want which are not actually properties of authentication. That is, they are beyond to scope of authentication, but people may none-the-less consider them to be part of authentication:
+There are some security properties that people may want which are not actually properties of authentication. That is, they are beyond the scope of authentication, but people may none-the-less consider them to be part of authentication:
 
 
 \begin{desiderata}
@@ -199,7 +199,7 @@ There are other security properties we may wish of authentication systems, but f
 
 It is not necessary to formally define MFA, but it is useful to review how it is typically presented.
 MFA is often presented as authentication requiring multiple factors, where the factors are of different types, each type facing distinct threats.
-Factors types are often described as “something you know,” such as a password;
+Factor types are often described as “something you know,” such as a password;
 “something you have,” such as a phone or specific device;
 and “something you are,” such as having a particular fingerprint.
 Although any of these factors can be stolen or compromised,
@@ -328,7 +328,8 @@ and so strong demand from a small minority of them will still be a “great deal
 
 We have made no attempt to count, much less content analyze, the discussion and exchanges mentioned below.
 We have not even gathered them or pointers to them.
-The various conversations occurred in our email customer support,
+The various conversations occurred
+through email via our customer support system,
 on our discussion forums,
 in comments on our blog,
 in comments on other people's blogs,
@@ -375,9 +376,15 @@ We have acquiesced~\autocite{Fillion18:mfa}.
 Prior to the introduction of an authentication component into 1Password, we were able to say ``no'' to requests for MFA, as it would have been entirely security theater.
 Although there may be cases where security theater is justified, we felt it would be harmful here.
 
-The most significant potential for harm is that the use of a theatrical MFA in 1Password might led people to chose weaker master passwords than they otherwise would. This would be a real reduction in data security for no compensating gain in either usability or other aspect of security.
+The most significant potential for harm is that
+the use of a theatrical MFA in 1Password might led people to
+chose weaker account passwords\footnote{%
+  The account password is the user memorized secret that the user enters when unlocking 1Password.
+  In older documentation or reports of customer conversations in the passed you may see it referred to as “Master Password” or “MP”.}
+than they otherwise would.
+This would be a real reduction in data security for no compensating gain in either usability or other aspect of security.
 
-Another way in which MFA can be harmful is that it further confuses the issue of potential reset. We do not have the capacity to reset a master password or account if someone forgets their master password or losses their Secret Key. We attempt to make the clear to users when they first start using 1Password. An MFA factor, however, can be reset, and the existence of something that we can (and do) reset dilutes an important message we are trying to communicate.
+Another way in which MFA can be harmful is that it further confuses the issue of potential reset. We do not have the capacity to reset a master password or account if someone forgets their account password or losses their Secret Key. We attempt to make it clear to users when they first start using 1Password. An MFA factor, however, can be reset, and the existence of something that we can (and do) reset dilutes an important message we are trying to communicate.
 
 Finally, and most obviously, any additional complexity for users or in the code just introduces increased opportunities for things to go wrong.
 
@@ -406,14 +413,14 @@ Although these conversations took their own individual courses,
 initial responses roughly fell into three categories:
 \begin{enumerate}
   \item “I want it, and your competitors are offering it”, or \label{1resp:justbecause}
-  \item “It keeps me safe even if my Master Password is discovered”, or \label{1resp:FS}
+  \item “It keeps me safe even if my account password is discovered”, or \label{1resp:FS}
   \item “It allows me to log in from untrusted computers when I'm traveling.”\label{1resp:CSec}
 \end{enumerate}
 
 \subsection{More secure}
 Response~\ref{1resp:justbecause} typically indicates that the person does not wish to engage in a discussion, and so we shouldn't press them more on their reasons.
 I personally do not encounter these, as I am usually only brought in to talk with people who do wish to discuss reasons for MFA\@.
-I have been told my our Sales team that this is what they most frequently encounter.
+I have been told by our Sales team that this is what they most frequently encounter.
 
 People do perceive that MFA systems add security~\autocites{gunsonETAL2011:CS,CristofaroDFN13},
 and so it is no surprise that they wish to have it in a system that is designed to store and manage high value secrets, such as a password manager.
