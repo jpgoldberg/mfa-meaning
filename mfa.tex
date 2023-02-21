@@ -96,7 +96,7 @@ Finally, we call for research on expectations of MFA so that we do not have to r
 
 \section{Authentication desiderata}\label{sec:desiderata}
 
-Authentication, very very roughly, is the process of proving ones identity to some system or service.
+Authentication, very very roughly, is the process of proving one's identity to some system or service.
 That service will either accept the proof or reject it.
 If accepted, it will then grant access to some resource. In what follows I'm going to use terms like ``client'' and ``server'' with a great deal of imprecision. The client may narrowly be something like a computer program such as a web-browser or might, more broadly, be the user in combination with the web-browser.
 
@@ -203,7 +203,7 @@ Factor types are often described as “something you know,” such as a password
 “something you have,” such as a phone or specific device;
 and “something you are,” such as having a particular fingerprint.
 Although any of these factors can be stolen or compromised,
-the security stems from the fact that it requires different attacks and different attacker capabilities to comprise the different types.
+the security stems from the fact that it requires different attacks and different attacker capabilities to compromise the different types.
 For example, an attacker who is in a position to capture a password may not be in a position to steal a phone or copy a fingerprint.
 
 There are an enormous number of different MFA schemes,
@@ -212,7 +212,7 @@ which can then serve as reference points for further discussion and also to help
 
 \subsection{Chip \& PIN}
 
-The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrate security property \prop{FS} in a distilled form.
+The ideal example of multiple factors is chip and PIN payment cards. Although it is not what people think about when they consider MFA it illustrates security property \prop{FS} in a distilled form.
 Physical possession of the card with the chip is required (something you have) along with the PIN (something you know).
 
 The chip contains a difficult to extract long term hard to guess (\prop{BigH}) and unique (\prop{Uniq}) secret. It can prove knowledge of that secret without revealing it (\prop{ZK+}). The chips make some (fallible) attempts to verify the authenticity of the card reader (\prop{SI}).
@@ -263,7 +263,7 @@ of authentication schemes which tend to be the only factor in single
 factor schemes or the primary factor in MFA schemes.
 
 \subsection{Traditional}
-The traditional scheme is transmitting a user created password to a server, which, if we are lucky, is storing a hashed version of that password. These only provide client authentication and fail at every other property we may desire.\footnote{There is one other property, Resistant to Pre-computation Attacks, that simple password authentication has and which is lacking from otherwise far more security schemes.~\autocite{JareckiETAL2018:OPAQUE}}
+The traditional scheme is transmitting a user created password to a server, which, if we are lucky, is storing a hashed version of that password. These only provide client authentication and fail at every other property we may desire.\footnote{There is one other property, Resistant to Pre-computation Attacks, that simple password authentication has and which is lacking from otherwise far more secure schemes.~\autocite{JareckiETAL2018:OPAQUE}}
 
 \subsection{PAKE}
 A Password-based Authenticated Key Exchange scheme (PAKE) provides mutual authentication (\prop{CI} and \prop{SI}) without transmitting any secrets during enrollment (\prop{ZK+}). The protocol involves mathematical computation which cannot be completed unless each party has access to their respective long term secrets.
@@ -361,7 +361,7 @@ In a number of reviews of password managers, 1Password was criticized for not of
 At the time, we attempted to explain as best we could why MFA was inappropriate for our security architecture. The success of those explanations was almost certainly limited to the individuals who asked and who were in a position to engage in long technical discussions.
 
 When we introduced our service in early 2016 (public beta in late 2015) two things changed:
-(1)~We actively offered services designed for business-like organization, and (2)~we did introduce an authentication component.
+(1)~We actively offered services designed for business-like organizations, and (2)~we did introduce an authentication component.
 The demand for MFA became compelling,
 and some conversations with prospective business customers could be summarized as 
 
@@ -380,7 +380,7 @@ The most significant potential for harm is that
 the use of a theatrical MFA in 1Password might led people to
 chose weaker account passwords\footnote{%
   The account password is the user memorized secret that the user enters when unlocking 1Password.
-  In older documentation or reports of customer conversations in the passed you may see it referred to as “Master Password” or “MP”.}
+  In older documentation or reports of customer conversations in the past you may see it referred to as “Master Password” or “MP”.}
 than they otherwise would.
 This would be a real reduction in data security for no compensating gain in either usability or other aspect of security.
 
@@ -396,7 +396,7 @@ we begin by trying to explain why MFA may add little to the security of 1Passwor
 Prior to launching the 1Password.com service, we would attempt to explain that
 1Password works solely by encryption and does not have an authentication component for which MFA could be applied.
 This is a remarkably subtle distinction,
-and we do not believe that we have succeeded at explaining it any but the
+and we do not believe that we have succeeded at explaining it to any but the
 most patient and curious individuals.
 
 With respect to the service, we would attempt to explain that our authentication process is not subject to the same threats that traditional password authentication is subject to.
@@ -407,7 +407,7 @@ a few individuals.
 During many of these conversations,
 we explicitly invited individuals to let us know what they were seeking with MFA\@.
 We have, indeed, learned from discussions.
-For example, we had not been \emph{explicitly} aware of \prop{Notif} as a valuable security property until people pointed it out to use.
+For example, we had not been \emph{explicitly} aware of \prop{Notif} as a valuable security property until people pointed it out to us.
 
 Although these conversations took their own individual courses,
 initial responses roughly fell into three categories:
